@@ -1,31 +1,32 @@
 package com.sparta.secondschedule.controller;
 
-import com.sparta.secondschedule.dto.ScheduleRequestDto;
-import com.sparta.secondschedule.dto.ScheduleResponseDto;
+import com.sparta.secondschedule.dto.schedule.request.ScheduleSaveRequestDto;
+import com.sparta.secondschedule.dto.schedule.request.ScheduleUpdateRequestDto;
+import com.sparta.secondschedule.dto.schedule.response.ScheduleDetailResponseDto;
+import com.sparta.secondschedule.dto.schedule.response.ScheduleSaveResponseDto;
+import com.sparta.secondschedule.dto.schedule.response.ScheduleUpdateResponseDto;
 import com.sparta.secondschedule.service.ScheduleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/schedule")
+@RequiredArgsConstructor
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
-    public ScheduleController(ScheduleService scheduleService) {
-        this.scheduleService = scheduleService;
-    }
 
-    @PostMapping
-    public ScheduleResponseDto createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+    @PostMapping("/schedules") // C:create
+    public ScheduleSaveResponseDto createSchedule(@RequestBody ScheduleSaveRequestDto requestDto) {
         return scheduleService.saveSchedule(requestDto);
     }
 
-    @GetMapping("/{id}")
-    public ScheduleResponseDto getSchedule(@PathVariable long id) {
-        return scheduleService.getSchedule(id);
+    @GetMapping("/schedules/{scheduleId}") // R:read
+    public ScheduleDetailResponseDto getSchedule(@PathVariable Long scheduleId) {
+        return scheduleService.getSchedule(scheduleId);
     }
 
-    @PutMapping("/{id}")
-    public ScheduleResponseDto updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto requestDto) {
-        return scheduleService.updateSchedule(id, requestDto);
+    @PutMapping("/schedules/{scheduleId}") // U:update
+    public ScheduleUpdateResponseDto updateSchedule(@PathVariable Long scheduleId, @RequestBody ScheduleUpdateRequestDto requestDto) {
+        return scheduleService.updateSchedule(scheduleId, requestDto);
     }
 }

@@ -1,43 +1,48 @@
 package com.sparta.secondschedule.service;
 
-import com.sparta.secondschedule.dto.ScheduleRequestDto;
-import com.sparta.secondschedule.dto.ScheduleResponseDto;
+import com.sparta.secondschedule.dto.schedule.request.ScheduleSaveRequestDto;
+import com.sparta.secondschedule.dto.schedule.request.ScheduleUpdateRequestDto;
+import com.sparta.secondschedule.dto.schedule.response.ScheduleDetailResponseDto;
+import com.sparta.secondschedule.dto.schedule.response.ScheduleSaveResponseDto;
+import com.sparta.secondschedule.dto.schedule.response.ScheduleUpdateResponseDto;
 import com.sparta.secondschedule.entity.Schedule;
 import com.sparta.secondschedule.repository.ScheduleRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    public ScheduleService(ScheduleRepository scheduleRepository) {
-        this.scheduleRepository = scheduleRepository;
-    }
 
-    public ScheduleResponseDto saveSchedule(ScheduleRequestDto requestDto) {
-        Schedule schedule = new Schedule(requestDto);
-
+    @Transactional
+    public ScheduleSaveResponseDto saveSchedule(ScheduleSaveRequestDto requestDto) {
+        Schedule schedule = new Schedule(requestDto.getUsername(), requestDto.getTitle(), requestDto.getContents());
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
-        ScheduleResponseDto scheduleResponseDto = new ScheduleResponseDto(savedSchedule);
-
-        return scheduleResponseDto;
+        return new ScheduleSaveResponseDto(savedSchedule.getId(), savedSchedule.getUsername(), savedSchedule.getTitle(),
+                savedSchedule.getContents(), savedSchedule.getCreatedDate(), savedSchedule.getModifiedDate());
     }
 
-    public ScheduleResponseDto getSchedule(Long id) {
-        Schedule schedule = scheduleRepository.findById(id)
+    public ScheduleDetailResponseDto getSchedule(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 할일이 존재하지 않습니다."));
-        return new ScheduleResponseDto(schedule);
+
+        return new ScheduleDetailResponseDto(schedule.getId(), schedule.getUsername(), schedule.getTitle(),
+                schedule.getContents(), schedule.getCreatedDate(), schedule.getModifiedDate());
     }
 
-    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
+    @Transactional
+    public ScheduleUpdateResponseDto updateSchedule(Long id, ScheduleUpdateRequestDto requestDto) {
         Schedule schedule = scheduleRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 ID를 가진 할일이 존재하지 않습니다."));
-        schedule.update(requestDto);
+        schedule.update(requestDto.getUsername(), requestDto.getTitle(), requestDto.getContents());
         Schedule updatedSchedule = scheduleRepository.save(schedule);
-        return new ScheduleResponseDto(updatedSchedule);
+
+        return new ScheduleUpdateResponseDto(updatedSchedule.getId(), updatedSchedule.getUsername(),
+                updatedSchedule.getTitle(), updatedSchedule.getContents(), updatedSchedule.getCreatedDate(),
+                updatedSchedule.getModifiedDate());
     }
 }
