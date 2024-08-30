@@ -1,2 +1,7 @@
 API
+
 https://documenter.getpostman.com/view/37607351/2sAXjKaCEo
+
+ERD
+
+![SoWkIImgAStDuU9ApIl9BAbKK7BEpyq5ifKK4eiLaY5iXMek1I3GKiXCKR1IyCdFIuVoIujJY_8ISrE1ei4bHPbmyUJyl1AWlc9qyUBaZDIKqfpKU8H1jGYRWw6oOAjXIacs6sXM3X4E0jeByvskBi8sAmKb94SgSN4vfEQbWCC70000](https://github.com/user-attachments/assets/29f2565b-138f-42e6-90fe-fa84d3468354)
